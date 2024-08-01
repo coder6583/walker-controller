@@ -1,0 +1,67 @@
+.parent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 25%;
+  height: 50%;
+  border-top: solid 1px var(--light-gray);
+}
+
+.icon {
+  width: 60%;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.noneIcon {
+  width: 100%;
+  font-size: 120px;
+  color: var(--light-gray);
+}
+
+.legoIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  height: 20%;
+  font-size: 14px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 32px;
+  color: var(--white);
+  font-size: 18px;
+  background-color: var(--theme);
+  border-radius: 4px;
+  margin-top: 32px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.disconnectButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 32px;
+  color: var(--white);
+  font-size: 18px;
+  background-color: var(--red);
+  border-radius: 4px;
+  margin: auto;
+  cursor: pointer;
+}
