@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+
+export interface WalkerState {
+  yaw: number;
+  pitch: number;
+  roll: number;
+  aX: number;
+  aY: number;
+  aZ: number;
+}
 
 export interface WalkerBLE {
   connect: () => void;
   disconnect: () => void;
   isConnected: boolean;
   send: (data: Uint32Array) => void;
+  walkerState: WalkerState;
 }
 
 export const useWalkerBLE = (): WalkerBLE => {
@@ -12,6 +22,26 @@ export const useWalkerBLE = (): WalkerBLE => {
   const [server, setServer] = useState<BluetoothRemoteGATTServer | null>(null);
   const [sendCharacteristic, setSendCharacteristic] =
     useState<BluetoothRemoteGATTCharacteristic | null>(null);
+  const [walkerState, setWalkerState] = useState<WalkerState>({
+    yaw: 0,
+    pitch: 0,
+    roll: 0,
+    aX: 0,
+    aY: 0,
+    aZ: 0,
+  });
+
+  const dataHandler = useCallback((event: Event) => {
+    const dv = (event.target as BluetoothRemoteGATTCharacteristic)?.value;
+    setWalkerState({
+      yaw: dv?.getFloat32(0, true) ?? 0,
+      pitch: dv?.getFloat32(4, true) ?? 0,
+      roll: dv?.getFloat32(8, true) ?? 0,
+      aX: dv?.getFloat32(12, true) ?? 0,
+      aY: dv?.getFloat32(16, true) ?? 0,
+      aZ: dv?.getFloat32(20, true) ?? 0,
+    });
+  }, []);
 
   const connect = async () => {
     const device = await navigator.bluetooth.requestDevice({
@@ -37,96 +67,14 @@ export const useWalkerBLE = (): WalkerBLE => {
     const sendChar = await service?.getCharacteristic(
       "71ca4354-fcd7-4c7a-80eb-7f84da39f358"
     );
-    const yawCharacteristic = await service?.getCharacteristic(
-      "d916ac47-00c6-4e88-8b20-6b0a578bf827"
-    );
-    const pitchCharacteristic = await service?.getCharacteristic(
-      "d6618e57-9f29-464c-8308-bc82f752d36a"
-    );
-    const rollCharacteristic = await service?.getCharacteristic(
-      "448383ea-56c4-417a-b8f8-27e719436e23"
-    );
-    const xCharacteristic = await service?.getCharacteristic(
-      "a71479c7-1f87-4f34-b8b4-8f0145244975"
-    );
-    const yCharacteristic = await service?.getCharacteristic(
-      "77f0d8d6-8c85-4061-9e7d-73db5b0afb07"
-    );
-    const zCharacteristic = await service?.getCharacteristic(
-      "4d0119f8-cd57-4f5c-955c-be183e0b23b1"
+    const dataCharacteristic = await service?.getCharacteristic(
+      "7d6bde2b-7608-4e4b-8e6f-e1d2303977a6"
     );
 
-    yawCharacteristic?.startNotifications().then(() => {
-      yawCharacteristic?.addEventListener(
+    dataCharacteristic?.startNotifications().then(() => {
+      dataCharacteristic?.addEventListener(
         "characteristicvaluechanged",
-        (event: Event) => {
-          const dv = (event.target as BluetoothRemoteGATTCharacteristic)?.value;
-          console.log("yaw", dv?.getFloat32(0, true));
-        }
-      );
-    });
-
-    pitchCharacteristic?.startNotifications().then(() => {
-      pitchCharacteristic?.addEventListener(
-        "characteristicvaluechanged",
-        (event: Event) => {
-          console.log(
-            "pitch",
-            (
-              event.target as BluetoothRemoteGATTCharacteristic
-            )?.value?.getFloat32(0)
-          );
-        }
-      );
-    });
-
-    rollCharacteristic?.startNotifications().then(() => {
-      rollCharacteristic?.addEventListener(
-        "characteristicvaluechanged",
-        (event: Event) => {
-          console.log(
-            "roll",
-            (
-              event.target as BluetoothRemoteGATTCharacteristic
-            )?.value?.getFloat32(0)
-          );
-        }
-      );
-    });
-
-    xCharacteristic?.startNotifications().then(() => {
-      xCharacteristic?.addEventListener(
-        "characteristicvaluechanged",
-        (event: Event) => {
-          console.log(
-            "x",
-            (event.target as BluetoothRemoteGATTCharacteristic)?.value
-          );
-        }
-      );
-    });
-
-    yCharacteristic?.startNotifications().then(() => {
-      yCharacteristic?.addEventListener(
-        "characteristicvaluechanged",
-        (event: Event) => {
-          console.log(
-            "y",
-            (event.target as BluetoothRemoteGATTCharacteristic)?.value
-          );
-        }
-      );
-    });
-
-    zCharacteristic?.startNotifications().then(() => {
-      zCharacteristic?.addEventListener(
-        "characteristicvaluechanged",
-        (event: Event) => {
-          console.log(
-            "z",
-            (event.target as BluetoothRemoteGATTCharacteristic)?.value
-          );
-        }
+        dataHandler
       );
     });
 
@@ -148,5 +96,5 @@ export const useWalkerBLE = (): WalkerBLE => {
     await sendCharacteristic?.writeValue(data);
   };
 
-  return { connect, send, isConnected, disconnect };
+  return { connect, send, isConnected, disconnect, walkerState };
 };

@@ -13,10 +13,10 @@ export default function Manual({
   walkerParams: WalkerParams;
   setWalkerParams: Dispatch<SetStateAction<WalkerParams>>;
 }): JSX.Element {
-  const [leftDelay, setLeftDelay] = useState(190);
-  const [rightDelay, setRightDelay] = useState(190);
-  const [leftVoltage, setLeftVoltage] = useState(3.3);
-  const [rightVoltage, setRightVoltage] = useState(2.58);
+  const [leftDelay, setLeftDelay] = useState(128);
+  const [rightDelay, setRightDelay] = useState(128);
+  const [leftVoltage, setLeftVoltage] = useState(3.0);
+  const [rightVoltage, setRightVoltage] = useState(2.7);
 
   const handleSend = () => {
     const leftVoltage8bit = Math.round((leftVoltage / 3.3) * 255);

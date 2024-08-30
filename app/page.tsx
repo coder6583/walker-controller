@@ -12,7 +12,7 @@ export default function Home() {
     <main className={styles.main}>
       <Controls walkerBLE={walkerBLE} />
       <div className={styles.right}>
-        <Log />
+        <Log walkerBLE={walkerBLE} />
         <Bluetooth walkerBLE={walkerBLE} />
       </div>
     </main>
