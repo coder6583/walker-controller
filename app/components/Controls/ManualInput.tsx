@@ -78,6 +78,9 @@ export default function ManualInput({
               event.preventDefault();
             }
           }}
+          onFocus={() => {
+            setCursor(0);
+          }}
           onChange={(event) => {
             if (
               event.currentTarget.value.length <= 3 &&
