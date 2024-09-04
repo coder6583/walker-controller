@@ -52,7 +52,9 @@
 }
 
 .value {
+  width: 60%;
   font-size: 32px;
   padding-right: 4px;
   outline: 0;
+  border: 0;
 }
