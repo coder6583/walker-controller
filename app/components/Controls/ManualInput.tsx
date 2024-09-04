@@ -83,7 +83,7 @@ export default function ManualInput({
           }}
           onChange={(event) => {
             if (
-              event.currentTarget.value.length <= 3 &&
+              event.currentTarget.value.length <= 4 &&
               event.currentTarget.value.match(/[0-9]+/)
             ) {
               setValue(Number(event.currentTarget.value));
