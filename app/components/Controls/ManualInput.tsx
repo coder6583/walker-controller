@@ -86,7 +86,9 @@ export default function ManualInput({
               event.currentTarget.value.length <= 4 &&
               event.currentTarget.value.match(/[0-9]+/)
             ) {
-              setValue(Number(event.currentTarget.value));
+              if (Number(event.currentTarget.value) <= 255) {
+                setValue(Number(event.currentTarget.value));
+              }
             } else if (
               id.includes("Voltage") &&
               event.currentTarget.value.match(/^[0-9].[0-9][0-9][0-9]$/)
